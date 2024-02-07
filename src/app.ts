@@ -29,14 +29,18 @@ class App {
 
 	private socketEvents(socket: Socket) {
 		console.log('Socket connected: ' + socket.id);
+
 		socket.on('subscribe', (data) => {
-			console.log('User added to room: ' + data.roomId)
+			console.log('User added to room: ' + data.roomId);
 			socket.join(data.roomId);
 
-			socket.broadcast.to(data.roomId).emit('chat', {
-				message: data.message,
-				username: data.username,
-				time: data.time,
+			socket.on('chat', (data) => {
+				console.log('Message data: ', data);
+				socket.broadcast.to(data.roomId).emit('chat', {
+					message: data.message,
+					username: data.username,
+					time: data.time,
+				});
 			});
 		});
 	}
