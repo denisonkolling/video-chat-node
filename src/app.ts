@@ -34,6 +34,15 @@ class App {
 			console.log('User added to room: ' + data.roomId);
 			socket.join(data.roomId);
 
+			const roomsSession = Array.from(socket.rooms);
+
+			if (roomsSession.length > 1) {
+				socket.to(data.roomId).emit('new user', {
+					socketId: socket.id,
+					username: data.username,
+				})
+			}
+
 			socket.on('chat', (data) => {
 				console.log('Message data: ', data);
 				socket.broadcast.to(data.roomId).emit('chat', {
