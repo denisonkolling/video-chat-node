@@ -33,6 +33,7 @@ class App {
 		socket.on('subscribe', (data) => {
 			console.log('User added to room: ' + data.roomId);
 			socket.join(data.roomId);
+			socket.join(data.socketId);
 
 			const roomsSession = Array.from(socket.rooms);
 
@@ -40,16 +41,23 @@ class App {
 				socket.to(data.roomId).emit('new user', {
 					socketId: socket.id,
 					username: data.username,
-				})
-			}
-
-			socket.on('chat', (data) => {
-				console.log('Message data: ', data);
-				socket.broadcast.to(data.roomId).emit('chat', {
-					message: data.message,
-					username: data.username,
-					time: data.time,
 				});
+			}
+		});
+
+		socket.on('newUserStart', (data) => {
+			console.log('New user arrived' + data)
+			socket.to(data.to).emit('newUserStart', {
+				sender: data.sender,
+			});
+		});
+
+		socket.on('chat', (data) => {
+			console.log('Message data: ', data);
+			socket.broadcast.to(data.roomId).emit('chat', {
+				message: data.message,
+				username: data.username,
+				time: data.time,
 			});
 		});
 	}
