@@ -46,7 +46,7 @@ class App {
 		});
 
 		socket.on('newUserStart', (data) => {
-			console.log('New user arrived' + data)
+			console.log('New user arrived', data)
 			socket.to(data.to).emit('newUserStart', {
 				sender: data.sender,
 			});
