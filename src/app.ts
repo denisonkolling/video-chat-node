@@ -46,7 +46,7 @@ class App {
 		});
 
 		socket.on('newUserStart', (data) => {
-			console.log('New user arrived', data)
+			console.log('New user arrived', data);
 			socket.to(data.to).emit('newUserStart', {
 				sender: data.sender,
 			});
@@ -65,8 +65,15 @@ class App {
 			socket.to(data.to).emit('sdp', {
 				description: data.description,
 				sender: data.sender,
-			})
-		})
+			});
+		});
+
+		socket.on('icecandidates', (data) => {
+			socket.to(data.to).emit('icecandidates', {
+				candidate: data.candidate,
+				sender: data.sender,
+			});
+		});
 	}
 }
 
